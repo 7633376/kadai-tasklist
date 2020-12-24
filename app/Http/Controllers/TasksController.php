@@ -112,7 +112,7 @@ class TasksController extends Controller
         $task = Task::findOrFail($id);
             
                     
-        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、投稿を削除
+        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、
         if (\Auth::id() === $task->user_id) {
             
             // task詳細ビューでそれを表示
@@ -141,7 +141,7 @@ class TasksController extends Controller
         // idの値でタスクを検索して取得
         $task = Task::findOrFail($id);
 
-        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、投稿を削除
+        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、
         if (\Auth::id() === $task->user_id) {
             
             // タスク編集ビューでそれを表示
@@ -174,12 +174,18 @@ class TasksController extends Controller
             'content' => 'required|max:255',
         ]);
         
-        // idの値でtaskを検索して取得
-        $task = Task::findOrFail($id);
-        // taskを更新
-        $task->status = $request->status;    // 追加
-        $task->content = $request->content;
-        $task->save();
+        
+        // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、
+        if (\Auth::id() === $task->user_id) {
+            
+            // idの値でtaskを検索して取得
+            $task = Task::findOrFail($id);
+            // taskを更新
+            $task->status = $request->status;    // 追加
+            $task->content = $request->content;
+            $task->save();
+                
+        }
 
         // トップページへリダイレクトさせる
         return redirect('/');
